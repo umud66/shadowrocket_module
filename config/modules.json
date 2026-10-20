@@ -1,0 +1,12 @@
+{
+  "repository": "umud66/shadowrocket_module",
+  "branch": "master",
+  "proxy_prefix": "https://gh-proxy.org/",
+  "modules": [
+    {
+      "name": "YouTube 去广告 / 画中画 / 后台播放",
+      "source": "https://raw.githubusercontent.com/akiralereal/shadowrocket-toolkit/main/dist/youtube.module",
+      "filename": "youtube.module"
+    }
+  ]
+}

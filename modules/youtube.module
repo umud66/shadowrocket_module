@@ -1,0 +1,19 @@
+#!name=iFansClub - Youtube
+#!desc=更新时间：2026-10-04 | 去广告、画中画与后台播放
+
+[Rule]
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP)),REJECT
+
+[URL Rewrite]
+(^https?://[\w-]+\.googlevideo\.com/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
+^https?://[\w-]+\.googlevideo\.com/(?!(?:dclk_video_ads|videoplayback\?)).+&oad _ reject-200
+^https?://(?:www|s)\.youtube\.com/api/stats/ads _ reject-200
+^https?://(?:www|s)\.youtube\.com/(?:pagead|ptracking) _ reject-200
+^https?://s\.youtube\.com/api/stats/qoe\?adcontext _ reject-200
+
+[Script]
+youtube_response=type=http-response,pattern=^https://youtubei\.googleapis\.com/youtubei/v1/(?:browse|next|player|search|reel/reel_watch_sequence|guide|account/get_setting|get_watch)(?:[/?#]|$),requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://gh-proxy.org/https://raw.githubusercontent.com/akiralereal/shadowrocket-toolkit/84477215bc16c39478203688fac8e2a943364c57/scripts/youtube-response.js,argument="{}"
+
+[MITM]
+hostname = %APPEND% -redirector*.googlevideo.com,*.googlevideo.com,s.youtube.com,www.youtube.com,youtubei.googleapis.com
