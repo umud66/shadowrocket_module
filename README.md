@@ -9,6 +9,8 @@
 | 模块 | 原始模块 | 转换后的 Raw | 代理后的 Raw（推荐） |
 | --- | --- | --- | --- |
 | YouTube 去广告 / 画中画 / 后台播放 | [上游原版](https://raw.githubusercontent.com/akiralereal/shadowrocket-toolkit/main/dist/youtube.module) | [直接下载](https://raw.githubusercontent.com/umud66/shadowrocket_module/master/modules/youtube.module) | [代理下载](https://gh-proxy.org/https://raw.githubusercontent.com/umud66/shadowrocket_module/master/modules/youtube.module) |
+| AdBlock 广告拦截 | [上游原版](https://raw.githubusercontent.com/akiralereal/shadowrocket-toolkit/main/dist/adblock.module) | [直接下载](https://raw.githubusercontent.com/umud66/shadowrocket_module/master/modules/adblock.module) | [代理下载](https://gh-proxy.org/https://raw.githubusercontent.com/umud66/shadowrocket_module/master/modules/adblock.module) |
+| Spotify 去播放广告 / 播放限制 | [上游原版](https://raw.githubusercontent.com/akiralereal/shadowrocket-toolkit/main/dist/spotify.module) | [直接下载](https://raw.githubusercontent.com/umud66/shadowrocket_module/master/modules/spotify.module) | [代理下载](https://gh-proxy.org/https://raw.githubusercontent.com/umud66/shadowrocket_module/master/modules/spotify.module) |
 
 ## 添加或更新模块
 
