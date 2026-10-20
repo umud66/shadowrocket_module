@@ -61,5 +61,31 @@ class ConvertTests(unittest.TestCase):
         self.assertIn(PREFIX + 'https://raw.githubusercontent.com/u/r/master/modules/a.module', out)
 
 
+    def test_sgmodule_is_accepted(self):
+        config = {'repository': 'u/r', 'branch': 'master', 'proxy_prefix': PREFIX,
+                  'modules': [{'name': 'YouTube Enhance',
+                               'source': 'https://raw.githubusercontent.com/Maasea/sgmodule/refs/heads/master/YouTube.Enhance.sgmodule',
+                               'filename': 'YouTube.Enhance.sgmodule'}]}
+        validate_config(config)
+        out = make_readme(config)
+        self.assertIn('modules/YouTube.Enhance.sgmodule', out)
+
+    def test_sgmodule_scripts_are_proxied_without_changing_arguments(self):
+        content = ('#!name=YouTube (Music) Enhance\n'
+                   '#!arguments=屏蔽上传按钮:true\n'
+                   '[Script]\n'
+                   'youtube.response = type=http-response,'
+                   'script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,'
+                   'argument="{\\"captionLang\\":\\"{{{字幕翻译语言}}}\\"}"\n'
+                   'youtube.request.init = type=http-request,'
+                   'script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js\n'
+                   '[MITM]\n'
+                   'hostname = %APPEND% *.googlevideo.com, youtubei.googleapis.com\n')
+        converted = convert_module(content, PREFIX)
+        self.assertEqual(converted.count('script-path=' + PREFIX), 2)
+        self.assertIn('argument="{\\"captionLang\\":\\"{{{字幕翻译语言}}}\\"}"', converted)
+        self.assertIn('hostname = %APPEND% *.googlevideo.com, youtubei.googleapis.com', converted)
+        self.assertEqual(convert_module(converted, PREFIX), converted)
+
 if __name__ == '__main__':
     unittest.main()

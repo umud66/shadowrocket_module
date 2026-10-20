@@ -23,7 +23,7 @@ README = ROOT / 'README.md'
 
 SCRIPT_PATH = re.compile(r'(?i)(\bscript-path\s*=\s*)(https://[^\s,;"\x27]+)')
 RULE_SET = re.compile(r'(?i)(\bRULE-SET\s*,\s*)(https://[^\s,;"\x27]+)')
-FILENAME = re.compile(r'[A-Za-z0-9][A-Za-z0-9._-]*\.module\Z')
+FILENAME = re.compile(r'[A-Za-z0-9][A-Za-z0-9._-]*\.(?:module|sgmodule)\Z')
 REPOSITORY = re.compile(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z')
 BRANCH = re.compile(r'[A-Za-z0-9_./-]+\Z')
 
@@ -140,7 +140,7 @@ def make_readme(config: dict) -> str:
     lines = [
         '# Shadowrocket 模块 GitHub 代理转换',
         '',
-        '通过 GitHub Actions 定时下载上游 `.module`，将 `[Script]` 中的 `script-path` 和'
+        '通过 GitHub Actions 定时下载上游 `.module` 或 `.sgmodule`，将 `[Script]` 中的 `script-path` 和'
         ' `[Rule]` 中的远程 `RULE-SET` GitHub Raw 地址改写为代理地址。'
         ' 其他规则、脚本参数、MITM 配置保持不变。',
         '',
@@ -162,7 +162,7 @@ def make_readme(config: dict) -> str:
         '## 添加或更新模块',
         '',
         '只需编辑 [`config/modules.json`](config/modules.json) 的 `modules` 数组，'
-        '为每个模块填写 `name`、`source`（原始 HTTPS 模块链接）、`filename`（如 `youtube.module`）。',
+        '为每个模块填写 `name`、`source`（原始 HTTPS 模块链接）、`filename`（如 `youtube.module` 或 `YouTube.Enhance.sgmodule`）。',
         '可按需修改 `proxy_prefix`（HTTPS 代理前缀，末尾保留 `/`）。'
         ' 保存并推送后，GitHub Actions 会自动生成 `modules/` 下的文件及这份链接清单。',
         '',
@@ -176,6 +176,7 @@ def make_readme(config: dict) -> str:
         '`github.com/owner/repo/blob/...` 和 `/raw/...`。',
         '- 已加代理的链接不会重复代理；非 GitHub URL、注释和 URL Rewrite 正则不会改写。',
         '- 这是**链接改写**，不会把外部 JS 下载、托管到本仓库；脚本执行时仍依赖代理服务。',
+        '- `.sgmodule` 为 Surge 模块格式；下载链接代理化不代表可直接在 Shadowrocket 导入使用。',
         '- Shadowrocket 导入模块后，如涉及 HTTPS 响应改写，请按模块说明开启 HTTPS 解密。',
         '- 使用第三方代理意味着模块和脚本下载会经过该服务；敏感或重要场景建议替换为可信的自建代理。',
         '',
@@ -203,7 +204,7 @@ def sync(check: bool = False) -> bool:
         original = fetch_text(module['source'])
         generated[module['filename']] = convert_module(original, config['proxy_prefix'])
     generated_readme = make_readme(config)
-    stale = sorted(p for p in OUTPUT.glob('*.module') if p.name not in generated) if OUTPUT.exists() else []
+    stale = sorted(p for p in OUTPUT.iterdir() if p.is_file() and p.suffix in ('.module', '.sgmodule') and p.name not in generated) if OUTPUT.exists() else []
     changed = []
     for filename, content in generated.items():
         file_path = OUTPUT / filename
