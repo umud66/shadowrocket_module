@@ -1,5 +1,5 @@
 #!name=iFansClub - Spotify
-#!desc=更新时间：2026-10-14 | 去播放广告与播放限制（部分功能）
+#!desc=更新时间：2026-10-21 | 去播放广告与播放限制（部分功能）
 
 [Header Rewrite]
 http-request ^https:\/\/(?:spclient\.wg\.spotify\.com|[A-Za-z0-9-]+-spclient\.spotify\.com(?::443)?)\/user-customization-service\/v1\/customize$ header-del if-none-match
